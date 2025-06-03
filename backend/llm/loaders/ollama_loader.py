@@ -8,9 +8,12 @@ ollama_serve_process = None
 
 
 def load_model(model_name, config=None):
+    model_config = config.get("model_config", {}).get("ollama", {}).get(model_name, {})
+    model_id = model_config.get("model_identifier")
+
     def ollama_generate(prompt, **kwargs):
         response = ollama.chat(
-            model=model_name, messages=[{"role": "user", "content": prompt}]
+            model=model_id, messages=[{"role": "user", "content": prompt}]
         )
         return response["message"]["content"]
 
