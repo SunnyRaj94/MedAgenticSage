@@ -1,0 +1,87 @@
+local_model_directory: <ROOT_PATH>/models/
+
+huggingface:
+  BioGPT:
+    available_locally: True
+    downloaded: False
+    model_identifier: microsoft/BioGPT
+    task: text-generation
+    local_path: ${local_model_directory}/huggingface/BioGPT/
+
+  ClinicalBERT:
+    available_locally: True
+    downloaded: False
+    model_identifier: emilyalsentzer/Bio_ClinicalBERT
+    task: feature-extraction
+    local_path: ${local_model_directory}/huggingface/ClinicalBERT/
+
+  MedAlpaca:
+    available_locally: True
+    downloaded: False
+    model_identifier: alps-research/medalpaca-7b
+    task: text-generation
+    local_path: ${local_model_directory}/huggingface/MedAlpaca/
+
+  LLaMA-3:
+    available_locally: False
+    downloaded: False
+    model_identifier: meta-llama/Meta-Llama-3-8B-Instruct 
+    task: text-generation
+    local_path: ${local_model_directory}/huggingface/LLaMA-3/
+
+  Mixtral:
+    available_locally: True
+    downloaded: False
+    model_identifier: mistralai/Mixtral-8x7B-Instruct-v0.1
+    task: text-generation
+    local_path: ${local_model_directory}/huggingface/Mixtral/
+
+ollama:
+  LLaMA-3:
+    available_locally: True
+    downloaded: False
+    model_identifier: llama3
+    local_path: ${local_model_directory}/ollama/llama3/
+
+  Mistral:
+    available_locally: True
+    downloaded: False
+    model_identifier: mistral
+    local_path: ${local_model_directory}/ollama/Mistral/
+
+  Gemma:
+    available_locally: True
+    downloaded: False
+    model_identifier: gemma
+    local_path: ${local_model_directory}/ollama/Gemma/
+
+together:
+  Mixtral:
+    api_key_env_var: TOGETHER_API_KEY
+    model_identifier: mistralai/Mixtral-8x7B-Instruct-v0.1
+
+  LLaMA-3:
+    api_key_env_var: TOGETHER_API_KEY
+    model_identifier: meta-llama/Llama-3-8b-chat
+
+groq:
+  Mixtral:
+    api_key_env_var: GROQ_API_KEY
+    model_identifier: mistralai/Mixtral-8x7B-Instruct-v0.1
+
+  LLaMA-3:
+    api_key_env_var: GROQ_API_KEY
+    model_identifier: llama-3.1-8b-instant
+
+openai:
+  GPT-4:
+    api_key_env_var: OPENAI_API_KEY
+    model_identifier: gpt-4
+  GPT-3.5:
+    api_key_env_var: OPENAI_API_KEY
+    model_identifier: gpt-3.5-turbo
+
+anthropic:
+  Claude-3:
+    api_key_env_var: ANTHROPIC_API_KEY
+    model_identifier: claude-3-opus-20240229
