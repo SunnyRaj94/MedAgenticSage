@@ -35,3 +35,19 @@ def load_model(model_name, source, extra_config=None):
         raise ImportError(f"{module_path} does not define load_model function.")
 
     return loader_func(model_name, config=extra_config or {})
+
+
+def get_llm(model_name, source, extra_config=None):
+    if source not in SUPPORTED_SOURCES:
+        raise ValueError(
+            f"Unsupported source: {source}. Supported sources: {list(SUPPORTED_SOURCES.keys())}"
+        )
+
+    module_path = SUPPORTED_SOURCES[source]
+    module = importlib.import_module(module_path)
+
+    loader_func = getattr(module, "get_llm", None)
+    if loader_func is None:
+        raise ImportError(f"{module_path} does not define get_llm function.")
+
+    return loader_func(model_name, config=extra_config or {})

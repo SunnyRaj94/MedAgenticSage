@@ -47,5 +47,6 @@ dependencies = [
     "accelerate>=0.21.0",
     "torch>=2.0.0",
     "PyYAML>=6.0",
-    "ollama"
+    "ollama",
+    "langchain-ollama",
 ]

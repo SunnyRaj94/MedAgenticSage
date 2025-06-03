@@ -3,8 +3,16 @@ import subprocess
 import time
 import os
 import signal
+from langchain_ollama import OllamaLLM
 
 ollama_serve_process = None
+
+
+def get_llm(model_name, config=None):
+    model_config = config.get("model_config", {}).get("ollama", {}).get(model_name, {})
+    model_id = model_config.get("model_identifier")
+    llm = OllamaLLM(model=model_id)
+    return llm
 
 
 def load_model(model_name, config=None):

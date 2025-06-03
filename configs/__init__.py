@@ -163,6 +163,7 @@ def print_directory_structure(startpath, indent_char="|   ", file_prefix="- "):
 
 # Iterate through all files in the configs directory
 for filename in os.listdir(CONFIGS_DIR):
+    # print(filename)
     filepath = os.path.join(CONFIGS_DIR, filename)
     if filename not in __include__ or os.path.isdir(filepath):
         continue
