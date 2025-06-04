@@ -133,32 +133,76 @@ def load_file(filename):
     return loaded_data, sanitized_config_name
 
 
-def print_directory_structure(startpath, indent_char="|   ", file_prefix="- "):
+def print_directory_structure(
+    startpath,
+    indent_char="|   ",
+    file_prefix="- ",
+    include_extensions=[".py"],
+    exclude_dirs=["__pycache__"],
+):
     """
-    Prints the directory structure in a tree-like format.
+    Prints the directory structure in a tree-like format,
+    with options for file extensions and directory exclusion.
 
     Args:
         startpath (str): The path to the directory to start traversing from.
         indent_char (str): The character(s) to use for indentation of subdirectories.
         file_prefix (str): The character(s) to use before file names.
+        include_extensions (list, optional): List of file extensions (e.g., ['.py', '.txt'])
+                                            to include. If None or empty, all files are included.
+        exclude_dirs (list, optional): List of directory names (e.g., ['__pycache__', '.git'])
+                                       to exclude from traversal and printing.
     """
     if not os.path.isdir(startpath):
         print(f"Error: '{startpath}' is not a valid directory.")
         return
 
-    print(os.path.basename(startpath) + "/")  # Print the root directory name
+    # Initialize defaults if None
+    if include_extensions is None:
+        include_extensions = []
+    if exclude_dirs is None:
+        exclude_dirs = []
 
+    # Print the base name of the starting directory (the "root" of the tree)
+    # It has no leading indent
+    print(os.path.basename(startpath) + "/")
+
+    # Iterate through the directory tree
     for root, dirs, files in os.walk(startpath):
-        level = root.replace(startpath, "").count(os.sep)
-        indent = indent_char * (level)
+        # Calculate the path relative to the startpath
+        # Example: if startpath='/a/b', and root='/a/b/c/d', relative_path='c/d'
+        relative_path = Path(root).relative_to(startpath)
 
-        # Print directories
-        for d in dirs:
-            print(f"{indent}{indent_char}{d}/")
+        # Determine the level for indentation.
+        # If relative_path is '.', it means 'root' is the same as 'startpath'.
+        # In this case, its children (files/dirs directly in startpath) should be at level 1.
+        # For deeper directories, the level is the number of path segments.
+        level = len(relative_path.parts) if relative_path.parts != (".",) else 0
 
-        # Print files
-        for f in files:
-            print(f"{indent}{indent_char}{file_prefix}{f}")
+        # Indentation for the *current level's children*
+        # So, level 0 (startpath's children) get 1 indent_char.
+        # Level 1 (startpath's direct subdirectories' children) get 2 indent_chars.
+        current_indent = indent_char * (
+            level + 1
+        )  # +1 to ensure first level has one indent
+
+        # --- IMPORTANT: Prune directories for os.walk IN-PLACE ---
+        # This prevents os.walk from entering excluded directories
+        dirs[:] = [d for d in dirs if d not in exclude_dirs]
+
+        # Print directories found at the current 'root' level
+        # Sort for consistent output order
+        for d in sorted(dirs):
+            print(f"{current_indent}{d}/")
+
+        # Print files found at the current 'root' level
+        # Sort for consistent output order
+        for f in sorted(files):
+            # Apply file extension filter
+            if not include_extensions or any(
+                f.endswith(ext) for ext in include_extensions
+            ):
+                print(f"{current_indent}{file_prefix}{f}")
 
 
 # Iterate through all files in the configs directory

@@ -49,4 +49,5 @@ dependencies = [
     "PyYAML>=6.0",
     "ollama",
     "langchain-ollama",
+    "biopython",
 ]
