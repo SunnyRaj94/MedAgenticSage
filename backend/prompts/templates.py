@@ -45,3 +45,39 @@ Answer the question:
 
 Be precise, cite evidence, and avoid speculation.
 """
+
+
+drug_interaction_prompt_template = """
+You are a medical safety assistant.
+
+Given the following medications: {drugs}
+
+Known interactions found:
+{interactions}
+
+Analyze the combination and provide:
+- A safety summary
+- Suggested monitoring actions
+- Warnings and clinical advice
+
+Be medically accurate and concise.
+"""
+
+
+treatment_prompt_template = """
+You are an expert clinical decision support assistant.
+
+Patient details:
+- Diagnosis: {diagnosis}
+- Age: {age}
+- Sex: {sex}
+- Comorbidities: {comorbidities}
+
+Based on NICE, NIH, and other evidence-based guidelines:
+
+🔹 Generate a step-by-step treatment plan
+🔹 Include first-line and second-line options
+🔹 Address all comorbidities
+🔹 Include medication, lifestyle, follow-up, and referrals
+🔹 Make it clear and clinician-ready
+"""
