@@ -134,75 +134,100 @@ def load_file(filename):
 
 
 def print_directory_structure(
-    startpath,
-    indent_char="|   ",
-    file_prefix="- ",
-    include_extensions=[".py"],
-    exclude_dirs=["__pycache__"],
+    startpath: str,
+    include_extensions: list = None,
+    exclude_dirs: list = None,
+    show_hidden: bool = False,
+    file_prefix: str = "📄 ",
+    dir_prefix: str = "📁 ",
 ):
     """
-    Prints the directory structure in a tree-like format,
-    with options for file extensions and directory exclusion.
+    Displays the directory structure in a readable, tree-like format.
 
     Args:
-        startpath (str): The path to the directory to start traversing from.
-        indent_char (str): The character(s) to use for indentation of subdirectories.
-        file_prefix (str): The character(s) to use before file names.
-        include_extensions (list, optional): List of file extensions (e.g., ['.py', '.txt'])
-                                            to include. If None or empty, all files are included.
-        exclude_dirs (list, optional): List of directory names (e.g., ['__pycache__', '.git'])
-                                       to exclude from traversal and printing.
+        startpath (str): The path to the root directory of the tree.
+        include_extensions (list, optional): A list of file extensions to include (e.g., ['.py']).
+                                             If None, all files are shown. Defaults to None.
+        exclude_dirs (list, optional): A list of directory names to exclude. Defaults to common ones.
+        show_hidden (bool): If True, shows hidden files and directories (those starting with '.').
+        file_prefix (str): Emoji or string to prepend to files.
+        dir_prefix (str): Emoji or string to prepend to directories.
     """
-    if not os.path.isdir(startpath):
-        print(f"Error: '{startpath}' is not a valid directory.")
+    if exclude_dirs is None:
+        exclude_dirs = ["__pycache__", ".git", ".vscode"]
+
+    try:
+        path_obj = Path(startpath)
+        if not path_obj.is_dir():
+            print(f"Error: '{startpath}' is not a valid directory.")
+            return
+    except Exception as e:
+        print(f"Error validating path: {e}")
         return
 
-    # Initialize defaults if None
-    if include_extensions is None:
-        include_extensions = []
-    if exclude_dirs is None:
-        exclude_dirs = []
+    print(f"{dir_prefix}{path_obj.name}/")
+    _print_tree_recursive(
+        path_obj,
+        prefix="",
+        include_extensions=include_extensions,
+        exclude_dirs=set(exclude_dirs),
+        show_hidden=show_hidden,
+        file_prefix=file_prefix,
+        dir_prefix=dir_prefix,
+    )
 
-    # Print the base name of the starting directory (the "root" of the tree)
-    # It has no leading indent
-    print(os.path.basename(startpath) + "/")
 
-    # Iterate through the directory tree
-    for root, dirs, files in os.walk(startpath):
-        # Calculate the path relative to the startpath
-        # Example: if startpath='/a/b', and root='/a/b/c/d', relative_path='c/d'
-        relative_path = Path(root).relative_to(startpath)
+def _print_tree_recursive(
+    dir_path: Path,
+    prefix: str,
+    include_extensions: list,
+    exclude_dirs: set,
+    show_hidden: bool,
+    file_prefix: str,
+    dir_prefix: str,
+):
+    """Recursive helper function to print the tree."""
+    # Get contents, applying filters
+    try:
+        contents = [
+            p
+            for p in dir_path.iterdir()
+            if (show_hidden or not p.name.startswith("."))
+            and p.name not in exclude_dirs
+        ]
+    except PermissionError:
+        print(f"{prefix}└── [Permission Denied]")
+        return
 
-        # Determine the level for indentation.
-        # If relative_path is '.', it means 'root' is the same as 'startpath'.
-        # In this case, its children (files/dirs directly in startpath) should be at level 1.
-        # For deeper directories, the level is the number of path segments.
-        level = len(relative_path.parts) if relative_path.parts != (".",) else 0
+    # Separate files and directories
+    files = sorted([p for p in contents if p.is_file()])
+    dirs = sorted([p for p in contents if p.is_dir()])
 
-        # Indentation for the *current level's children*
-        # So, level 0 (startpath's children) get 1 indent_char.
-        # Level 1 (startpath's direct subdirectories' children) get 2 indent_chars.
-        current_indent = indent_char * (
-            level + 1
-        )  # +1 to ensure first level has one indent
+    # Apply extension filter
+    if include_extensions:
+        files = [f for f in files if f.suffix in include_extensions]
 
-        # --- IMPORTANT: Prune directories for os.walk IN-PLACE ---
-        # This prevents os.walk from entering excluded directories
-        dirs[:] = [d for d in dirs if d not in exclude_dirs]
+    entries = dirs + files
 
-        # Print directories found at the current 'root' level
-        # Sort for consistent output order
-        for d in sorted(dirs):
-            print(f"{current_indent}{d}/")
+    for i, path in enumerate(entries):
+        # Use '└──' for the last item, '├──' for others
+        connector = "└── " if i == len(entries) - 1 else "├── "
 
-        # Print files found at the current 'root' level
-        # Sort for consistent output order
-        for f in sorted(files):
-            # Apply file extension filter
-            if not include_extensions or any(
-                f.endswith(ext) for ext in include_extensions
-            ):
-                print(f"{current_indent}{file_prefix}{f}")
+        if path.is_dir():
+            print(f"{prefix}{connector}{dir_prefix}{path.name}/")
+            # The prefix for children adds space for the current connector
+            child_prefix = prefix + ("    " if i == len(entries) - 1 else "│   ")
+            _print_tree_recursive(
+                path,
+                child_prefix,
+                include_extensions,
+                exclude_dirs,
+                show_hidden,
+                file_prefix,
+                dir_prefix,
+            )
+        else:
+            print(f"{prefix}{connector}{file_prefix}{path.name}")
 
 
 # Iterate through all files in the configs directory
