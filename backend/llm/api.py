@@ -9,6 +9,7 @@ SUPPORTED_SOURCES = {
     "together": "backend.llm.loaders.together_loader",
     "groq": "backend.llm.loaders.groq_loader",
     "anthropic": "backend.llm.loaders.anthropic_loader",
+    "openrouter": "backend.llm.loaders.openai_loader",
 }
 
 
@@ -106,13 +107,17 @@ def load_llm_langchain(
     # 2. Prepare kwargs for init_chat_model
     init_kwargs = {
         "model": model_id,
-        "model_provider": source,
+        "model_provider": source if source != "openrouter" else "openai",
         "temperature": model_specific_config.get(
             "temperature", 0.0
         ),  # Default to 0.0 for deterministic tasks
         # Add other common parameters from model_specific_config if you define them
         # e.g., "max_tokens": model_specific_config.get("max_tokens"),
     }
+    keys_to_exclude = ["model_identifier", "api_key_env_var"]
+    init_kwargs.update(
+        {k: v for k, v in model_specific_config.items() if k not in keys_to_exclude}
+    )
 
     # 3. Handle API keys for remote providers
     api_key_env_var = model_specific_config.get("api_key_env_var")

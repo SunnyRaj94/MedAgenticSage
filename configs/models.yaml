@@ -81,6 +81,14 @@ openai:
     api_key_env_var: OPENAI_API_KEY
     model_identifier: gpt-3.5-turbo
 
+openrouter:
+  deepseek_qwen:
+    api_key_env_var: OPEN_ROUTER_API_KEY
+    base_url: https://openrouter.ai/api/v1
+    model_identifier: deepseek/deepseek-r1-0528-qwen3-8b:free
+    streaming: True
+
+
 anthropic:
   Claude-3:
     api_key_env_var: ANTHROPIC_API_KEY

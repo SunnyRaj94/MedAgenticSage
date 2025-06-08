@@ -4,6 +4,9 @@ import re
 import json
 from pathlib import Path
 from dotenv import dotenv_values
+import warnings
+
+warnings.filterwarnings(action="ignore")
 
 CONFIGS_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = Path(CONFIGS_DIR).parent.resolve()
