@@ -1,119 +1,206 @@
-# MedAgenticSage
-Med = Healthcare/Medicine  Agentic = Autonomous agents  Sage = Wisdom, reasoning, knowledge
-MedAgenticSage is an autonomous AI system for healthcare, built with Python, LangGraph, and Streamlit. It combines modular AI agents for symptom analysis, medical Q&A, EHR summarization, treatment planning, and medication safety—bringing wisdom, autonomy, and reasoning to healthcare AI.
+# 🧠 MedAgenticSage: Autonomous AI for Healthcare
 
-# ***UNDER DEVELOPMENT***
+**MedAgenticSage** = **Med**icine + **Agentic** AI + **Sage** Wisdom
+An autonomous healthcare assistant built with modular AI agents, reasoning graphs, and a user-friendly interface. It combines clinical reasoning with real-world APIs to bring intelligent, personalized, and safe medical insights.
 
-# 🧠 Autonomous Healthcare Assistant — Agentic AI System
-
-An autonomous, modular AI agent system for healthcare that can:
-- ✅ Check symptoms → differential diagnosis
-- ✅ Summarize clinical/EHR notes
-- ✅ Answer questions using biomedical literature
-- ✅ Recommend treatment plans
-- ✅ Check drug safety and interactions
-
-Built with:
-- 🧱 LangGraph for agent orchestration
-- 🧠 GPT-4, Claude, LLaMA
-- 🔍 PubMed, DrugBank, MIMIC
-- 🔁 Modular Jupyter notebooks for development
-- 🖼️ Streamlit (UI planned in later phase)
+> ✅ Powered by Python, LangGraph, Streamlit, and leading LLMs
+> 🚧 ***Still under active development***
 
 ---
 
-## 📁 Folder Structure
+## 💡 What Can It Do?
+
+An end-to-end, modular agent system for healthcare that can:
+
+* 🔍 Check symptoms → suggest likely diagnoses
+* 📋 Summarize clinical notes and EHRs
+* 📚 Answer biomedical questions using PubMed
+* 💊 Recommend personalized treatment plans
+* ⚠️ Analyze drug interactions and medication safety
+
+---
+
+## 🧱 Core Tech Stack
+
+| Layer             | Tools & Frameworks                               |
+| ----------------- | ------------------------------------------------ |
+| UI                | Streamlit                                        |
+| Backend API       | Modular FastAPI-style architecture               |
+| Agentic Logic     | LangGraph (agent orchestration), LangChain       |
+| LLMs              | GPT-4, Claude, LLaMA, Ollama, Hugging Face, etc. |
+| Retrieval         | ChromaDB / FAISS, PubMed API                     |
+| Tools/APIs        | DrugBank, OpenFDA, MIMIC (clinical notes)        |
+| Memory (optional) | LangGraph Memory, Redis                          |
+
+---
+
+## 📂 Project Structure
 
 ```
-
-autonomous\_healthcare\_assistant/
+MedAgenticSage/
 │
-├── 0\_setup\_environment.ipynb           # Set up APIs, LLMs, tools
-├── 1\_symptom\_checker.ipynb             # Symptom → Diagnosis agent
-├── 2\_ehr\_summarizer.ipynb              # Clinical note summarizer
-├── 3\_literature\_qa.ipynb               # PubMed QA via RAG
-├── 4\_drug\_interaction\_checker.ipynb    # Drug safety/interaction checker
-├── 5\_treatment\_planner.ipynb           # Personalized care planning
-├── 6\_agentic\_orchestration.ipynb       # LangGraph: combine all agents
+├── assets/                 # UI mockups and screenshots
 │
-├── utils/                              # Helper scripts, prompts, tools
-│   ├── api\_helpers.py
-│   ├── prompt\_templates.py
-│   └── data\_loader.py
+├── backend/               # Core logic and agent architecture
+│   ├── agents/            # All autonomous agent modules
+│   ├── db/                # Agent run persistence (SQLite/Mongo)
+│   ├── llm/               # LLM loaders (OpenAI, Claude, Ollama, etc.)
+│   ├── prompts/           # Prompt templates
+│   ├── vector_db/         # Vector store client setup
 │
-├── data/                               # MIMIC excerpts, sample cases
-│   └── (test EHRs, drug lists, etc.)
+├── configs/               # YAML-based model and app settings
 │
-└── README.md
-
-````
+├── data/                  # Sample data, persisted states
+│
+├── frontend/              # Streamlit app
+│   ├── components/        # Chat UI and file upload components
+│   └── streamlit_app.py   # Main app entry point
+│
+├── notebooks/             # Development notebooks (prototype modules)
+│
+├── pyproject.toml         # Poetry or pip-based project config
+└── README.md              # Project overview and setup
+```
 
 ---
 
-## 🔧 Tech Stack
+## 🚀 Features & Modules
 
-| Layer                  | Tools & Frameworks                            |
-|------------------------|-----------------------------------------------|
-| UI (future)            | Streamlit                                     |
-| API Gateway (future)   | FastAPI                                       |
-| Agentic Logic          | LangGraph, LangChain                          |
-| LLMs                   | OpenAI GPT-4, Claude, LLaMA (local/remote)    |
-| Retrieval              | Chroma, FAISS + PubMed API                    |
-| Tools/APIs             | DrugBank API, OpenFDA, PubMed, MIMIC          |
-| Memory (optional)      | LangGraph Memory, Redis                       |
-
----
-
-## 🚀 Build Roadmap
-
-| Phase | Module                        | Focus                          |
-|-------|-------------------------------|---------------------------------|
-| 1     | `1_symptom_checker.ipynb`     | MVP with LLM + prompt + tools  |
-| 2     | `2_ehr_summarizer.ipynb`      | MIMIC parsing + summarization  |
-| 3     | `3_literature_qa.ipynb`       | PubMed search + RAG            |
-| 4     | `4_drug_interaction_checker`  | Drug safety checks             |
-| 5     | `5_treatment_planner.ipynb`   | Clinical logic + guidelines    |
-| 6     | `6_agentic_orchestration`     | LangGraph + memory             |
-| 7     | UI + feedback loop            | Streamlit UI, RLHF             |
+| Module                       | Description                              |
+| ---------------------------- | ---------------------------------------- |
+| `1_symptom_checker`          | Symptoms → diagnosis via LLM + reasoning |
+| `2_ehr_summarizer`           | Summarize clinical notes / EHR free-text |
+| `3_literature_qa`            | Ask biomedical questions using PubMed    |
+| `4_drug_interaction_checker` | Drug safety + side-effect analysis       |
+| `5_treatment_planner`        | Recommend evidence-based treatment plans |
+| `6_langgraph_orchestration`  | Combine all agents into autonomous graph |
 
 ---
 
-## ✅ Getting Started
+## 📸 Screenshots
 
-1. Clone this repo:
-    ```bash
-    git clone https://github.com/yourname/autonomous_healthcare_assistant.git
-    cd autonomous_healthcare_assistant
-    ```
+### 🖼️ Complete App Structure
 
-2. Install dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
+> Overview of the full Streamlit interface and component layout.
 
-3. Set your `.env` with API keys:
-    ```env
-    OPENAI_API_KEY=...
-    PUBMED_API_KEY=...
-    DRUGBANK_API_KEY=...
-    ```
+![Complete Web Page Structure](assets/complete_web_page_structure.png)
 
-4. Start with the first notebook:
-    ```
-    0_setup_environment.ipynb
-    ```
+---
+
+### 📝 Input Form for Running Agents
+
+> Enter patient symptoms, EHR notes, questions, and medications to trigger an AI run.
+
+![Form Page](assets/form_page.png)
+
+---
+
+### 🤖 Agent Response Output
+
+> Real-time, multi-agent reasoning output — includes diagnosis, EHR summary, treatment recommendations, and safety checks.
+
+![Agent Response](assets/agent_response.png)
+
+---
+
+### 📂 Past Agent Runs - Summary View
+
+> View previous agent runs in a tabulated format with actions.
+
+![Past Runs List](assets/past_run_with_delete.png)
+
+---
+
+### 📋 Past Agent Runs - Detailed View
+
+> Expand and inspect inputs and outputs from earlier sessions.
+
+![Past Run Details](assets/past_runs_details.png)
+
+---
+
+### 🧠 App Entry Point
+
+> The landing page of the MedAgenticSage system.
+
+![App Home](assets/medagent_app.png)
+
+---
+
+## 🖥️ Frontend: Streamlit UI (Live)
+
+* 📄 Upload patient notes or EHRs
+* 💬 Chat with the assistant
+* 🧠 Run end-to-end agents on new cases
+* 🗂️ View and manage past runs
+
+> UI built with modular Streamlit components under `frontend/components/`.
+
+---
+
+## 🧪 Getting Started
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/sunnyraj94/MedAgenticSage.git
+cd MedAgenticSage
+```
+
+2. **Install dependencies**
+
+```bash
+pip install -e .
+```
+
+3. **Set up API keys**
+
+Create a `.env` file in the configs directory:
+
+```env
+OPENAI_API_KEY=...
+CLAUDE_API_KEY=...
+DRUGBANK_API_KEY=...
+PUBMED_API_KEY=...
+```
+
+4. **Start the app**
+
+```bash
+streamlit run frontend/streamlit_app.py
+```
+
+Or test notebooks in order:
+
+```bash
+notebooks/0_setup_environment.ipynb
+```
+
+---
+
+## 🧪 Development Roadmap
+
+| Phase | Focus                      | Status    |
+| ----- | -------------------------- | --------- |
+| 1     | Modular Jupyter agents     | ✅ Done    |
+| 2     | LangGraph orchestration    | ✅ Working |
+| 3     | Backend modularization     | ✅ Ongoing |
+| 4     | Streamlit UI               | ✅ Live    |
+| 5     | Feedback loop + Memory     | ⏳ Next    |
+| 6     | Agent tuning (RLHF, logic) | ⏳ Later   |
 
 ---
 
 ## 📌 Notes
 
-- All modules are independently testable.
-- UI will be built once all agents are validated.
-- The system is designed to be composable and extendable.
+* Each agent is modular, testable, and extendable
+* All external API keys are optional but improve accuracy
+* Works with both cloud and local LLMs (Ollama, HF, etc.)
 
 ---
 
-## 🧠 License & Attribution
+## ⚖️ License & Attribution
 
-- Based on public datasets: MIMIC, HumanDx, PubMed, etc.
-- All medical logic and recommendations should be validated by licensed professionals.
+* Uses publicly available medical datasets: MIMIC, HumanDx, PubMed
+* Intended for research and educational use only
+* Not a substitute for licensed medical advice
