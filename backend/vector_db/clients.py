@@ -1,5 +1,8 @@
-from langchain.vectorstores import Chroma, FAISS
-from langchain.embeddings import HuggingFaceEmbeddings
+# from langchain.vectorstores import Chroma, FAISS
+from langchain_community.vectorstores import Chroma, FAISS
+
+# from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from abc import ABC, abstractmethod
 import os
 

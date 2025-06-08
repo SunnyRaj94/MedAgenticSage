@@ -1,0 +1,14 @@
+local_data_directory: <ROOT_PATH>/data/
+llm:
+  source: groq
+  model_name: LLaMA-3
+db:
+  medagent:
+    local_path: ${local_data_directory}/db/sqlite/medagent/
+  users:
+    local_path: ${local_data_directory}/db/sqlite/users/
+
+retriever:
+  store_type: chroma
+  persist_dir: ${local_data_directory}/storage/chroma/
+  embedding_model: sentence-transformers/all-MiniLM-L6-v2
