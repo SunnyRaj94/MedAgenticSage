@@ -26,14 +26,22 @@ class AgentState(TypedDict):
 
 
 # -- Graph Definition --
-def build_graph(llm, retriever):
+def build_graph(llm, retriever, **kwargs):
     builder = StateGraph(AgentState)
-    builder.add_node("inject_context", lambda s: inject_retrieved_context(s, retriever))
-    builder.add_node("symptom_checker", lambda s: symptom_node(s, llm, retriever))
-    builder.add_node("ehr_summarizer", lambda s: ehr_node(s, llm, retriever))
-    builder.add_node("literature_qa", lambda s: literature_node(s, llm, retriever))
-    builder.add_node("drug_checker", lambda s: drug_node(s, llm, retriever))
-    builder.add_node("treatment_planner", lambda s: treatment_node(s, llm, retriever))
+    builder.add_node(
+        "inject_context", lambda s: inject_retrieved_context(s, retriever, **kwargs)
+    )
+    builder.add_node(
+        "symptom_checker", lambda s: symptom_node(s, llm, retriever, **kwargs)
+    )
+    builder.add_node("ehr_summarizer", lambda s: ehr_node(s, llm, retriever, **kwargs))
+    builder.add_node(
+        "literature_qa", lambda s: literature_node(s, llm, retriever, **kwargs)
+    )
+    builder.add_node("drug_checker", lambda s: drug_node(s, llm, retriever, **kwargs))
+    builder.add_node(
+        "treatment_planner", lambda s: treatment_node(s, llm, retriever, **kwargs)
+    )
 
     builder.set_entry_point("inject_context")
     builder.add_conditional_edges(

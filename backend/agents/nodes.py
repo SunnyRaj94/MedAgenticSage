@@ -7,23 +7,23 @@ def log_keys(state, node_name):
     print(f"\U0001f511 Keys in state at {node_name}: {list(state.keys())}")
 
 
-def symptom_node(state, llm, retriever: VectorStoreBase = None):
+def symptom_node(state, llm, retriever: VectorStoreBase = None, **kwargs):
     log_keys(state, "symptom_node")
     diagnosis = Runner.run_symptom_checker(symptoms=state.get("symptoms"), llm=llm)
     state["diagnosis"] = diagnosis
-    add_to_memory(diagnosis, source="diagnosis")
+    add_to_memory(diagnosis, source="diagnosis", **kwargs)
     return state
 
 
-def ehr_node(state, llm, retriever: VectorStoreBase = None):
+def ehr_node(state, llm, retriever: VectorStoreBase = None, **kwargs):
     log_keys(state, "ehr_node")
     summary = Runner.run_ehr_summarizer(ehr_text=state.get("ehr_text"), llm=llm)
     state["summary"] = summary
-    add_to_memory(summary, source="ehr_summary")
+    add_to_memory(summary, source="ehr_summary", **kwargs)
     return state
 
 
-def literature_node(state, llm, retriever: VectorStoreBase = None):
+def literature_node(state, llm, retriever: VectorStoreBase = None, **kwargs):
     log_keys(state, "literature_node")
     question = state.get("question")
     if retriever:
@@ -33,11 +33,11 @@ def literature_node(state, llm, retriever: VectorStoreBase = None):
         context = "\n".join([r["text"] for r in retrieve_context(question)])
     answer = Runner.run_literature_qa(question=question, llm=llm, context=context)
     state["literature_answer"] = answer
-    add_to_memory(answer, source="literature_qa")
+    add_to_memory(answer, source="literature_qa", **kwargs)
     return state
 
 
-def drug_node(state, llm, retriever: VectorStoreBase = None):
+def drug_node(state, llm, retriever: VectorStoreBase = None, **kwargs):
     log_keys(state, "drug_node")
     meds = state.get("medications")
     if isinstance(meds, str):
@@ -48,19 +48,19 @@ def drug_node(state, llm, retriever: VectorStoreBase = None):
         meds=meds, llm=llm, patient_data=state.get("diagnosis", "")
     )
     state["interaction_report"] = report
-    add_to_memory(report, source="drug_checker")
+    add_to_memory(report, source="drug_checker", **kwargs)
     return state
 
 
-def treatment_node(state, llm, retriever: VectorStoreBase = None):
+def treatment_node(state, llm, retriever: VectorStoreBase = None, **kwargs):
     log_keys(state, "treatment_node")
     plan = Runner.run_treatment_plan(profile=state.get("patient_profile"), llm=llm)
     state["treatment_plan"] = plan
-    add_to_memory(plan, source="treatment_plan")
+    add_to_memory(plan, source="treatment_plan", **kwargs)
     return state
 
 
-def inject_retrieved_context(state, vector_store: VectorStoreBase = None):
+def inject_retrieved_context(state, vector_store: VectorStoreBase = None, **kwargs):
     query = state.get("question") or state.get("symptoms")
     if not query or not vector_store:
         return state

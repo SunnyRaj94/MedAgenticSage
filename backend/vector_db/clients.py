@@ -79,3 +79,13 @@ def get_vector_store(store_type: str = "chroma", **kwargs) -> VectorStoreBase:
 def get_vector_retriever(store_type="chroma", k=3, **kwargs):
     store = get_vector_store(store_type=store_type, **kwargs)
     return store
+
+
+def get_embeddings_model(model_name=None):
+    from sentence_transformers import SentenceTransformer
+
+    model_name = (
+        "sentence-transformers/all-MiniLM-L6-v2" if not model_name else model_name
+    )
+    global_embedding_model_for_memory = SentenceTransformer(model_name)
+    return global_embedding_model_for_memory
